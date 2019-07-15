@@ -1,4 +1,4 @@
-%% Code from 
+%% Code from
 %%   Erlang Programming
 %%   Francecso Cesarini and Simon Thompson
 %%   O'Reilly, 2008
@@ -10,8 +10,8 @@
 
 -module(chapter3).
 
--export([convert/1,listlen/1,listlen2/1]).
--export([index/1,index/2,index2/2,index3/2]).
+-export([convert/1,listlen/1,listlen2/1,lengthlist/2,lengthlist/1]).
+-export([index/1,index/2,index2/2,index3/2, index4/3, index4/2]).
 -export([f/1,g/1,safe/1,preferred/1]).
 
 -export([factorial/1,guard/2,guard2/2]).
@@ -45,7 +45,19 @@ convert(Day) ->
   end.
 
 % Calculating the length of a list.
+lengthlist([]) ->
+  0;
+lengthlist(A) ->
+  lengthlist(A, 1).
 
+
+lengthlist(L,A) ->
+  case L of
+     [] ->A;
+     _ -> lengthlist(tl(L),A+1)
+  end.
+
+% Calculating the length of a list.
 listlen([])     -> 0;
 listlen([_|Xs]) -> 1 + listlen(Xs).
 
@@ -57,8 +69,23 @@ listlen2(Y) ->
     [_|Xs] -> 1 + listlen2(Xs)
   end.
 
-% Indexing into a list, i.e. looking for the nth element of a  
+
+% Indexing into a list, i.e. looking for the nth element of a
 % list (with numbering from zero).
+
+index4(A,N) when  ->
+  case A of
+    [] -> {error};
+    _ -> index4(A,0,N)
+  end.
+
+
+index4(A,B,N) ->
+  case B == N of
+      true -> hd(A);
+      _ -> index4(tl(A),B+1,N)
+  end.
+
 
 index(0,[X|_])           -> X;
 index(N,[_|Xs]) when N>0 -> index(N-1,Xs).
@@ -99,12 +126,12 @@ g([])     -> 0.
 % Binding a variable in both arms of a case expression is
 % possible ...
 
-safe(X) ->                
-  case X of                  
-    one -> Y = 12;               
-    _   -> Y = 196               
-  end,                         
-  X+Y.                        
+safe(X) ->
+  case X of
+    one -> Y = 12;
+    _   -> Y = 196
+  end,
+  X+Y.
 
 % ... but the preferred style is to assign a value to the variable.
 % where the value is defined using a case
@@ -113,10 +140,10 @@ preferred(X) ->
   Y = case X of
         one -> 12;
         _   -> 196
-      end,       
-  X+Y.           
+      end,
+  X+Y.
 
-%% Guards 
+%% Guards
 
 % Defining factorial using a guard
 
@@ -167,7 +194,7 @@ member(_, [])      -> false;
 member(H, [H | _]) -> true;
 member(H, [_ | T]) -> member(H, T).
 
-% Summing a list using tail recursion. 
+% Summing a list using tail recursion.
 
 sum_acc([],Sum) -> Sum;
 sum_acc([Head|Tail], Sum) -> sum_acc(Tail, Head+Sum).
@@ -237,20 +264,20 @@ test2(N) ->
     N > 0 -> true
   end.
 
-% 
+%
 
 %% Handling Errors
 
 % Examples showing different kinds of error behaviour.
 
-try_return(X) when is_integer(X) -> 
-  try return_error(X) of 
-    Val -> {normal, Val} 
-  catch 
-    exit:Reason -> {exit, Reason}; 
-    throw:Throw -> {throw, Throw}; 
-    error:Error -> {error, Error} 
-  end. 
+try_return(X) when is_integer(X) ->
+  try return_error(X) of
+    Val -> {normal, Val}
+  catch
+    exit:Reason -> {exit, Reason};
+    throw:Throw -> {throw, Throw};
+    error:Error -> {error, Error}
+  end.
 
 try_wildcard(X) when is_integer(X) ->
   try return_error(X)
