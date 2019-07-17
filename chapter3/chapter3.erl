@@ -11,12 +11,12 @@
 -module(chapter3).
 
 -export([convert/1,listlen/1,listlen2/1,lengthlist/2,lengthlist/1]).
--export([index/1,index/2,index2/2,index3/2, index4/3, index4/2]).
+-export([index/1,index/2,index2/2,index3/2]).
 -export([f/1,g/1,safe/1,preferred/1]).
 
 -export([factorial/1,guard/2,guard2/2]).
 -export([even/1, number/1]).
--export([bump/1,average/1,sum/1,len/1]).
+-export([bump/1,bump3/1,average/1,sum/1,len/1]).
 -export([member/2]).
 -export([sum_acc/2,sum2/1,bump_acc/2,bump2/1]).
 -export([reverse/1,reverse_acc/2]).
@@ -73,18 +73,6 @@ listlen2(Y) ->
 % Indexing into a list, i.e. looking for the nth element of a
 % list (with numbering from zero).
 
-index4(A,N) when  ->
-  case A of
-    [] -> {error};
-    _ -> index4(A,0,N)
-  end.
-
-
-index4(A,B,N) ->
-  case B == N of
-      true -> hd(A);
-      _ -> index4(tl(A),B+1,N)
-  end.
 
 
 index(0,[X|_])           -> X;
@@ -166,7 +154,7 @@ guard2(X,Y) when not(X>Y) , is_atom(X) ; not(is_atom(Y)) , X=/=3.4 ->
 even(Int) when Int rem 2 == 0 -> true;
 even(Int) when Int rem 2 == 1 -> false.
 
-number(Num) when is_integer(Num) -> integer;
+number(Num) when is_integer(Num) andalso Num > 0 andalso Num < 100 -> integer;
 number(Num) when is_float(Num)   -> float;
 number(_Other)                   -> false.
 
@@ -174,6 +162,11 @@ number(_Other)                   -> false.
 
 % The bump function: add one to each element of a list.
 % A first example of recursion.
+
+
+bump3([]) -> emptylist;
+bump3(A) -> [X+1||X<-A].
+
 
 bump([]) -> [];
 bump([Head | Tail]) -> [Head + 1 | bump(Tail)].
@@ -188,7 +181,21 @@ sum([Head | Tail]) -> Head + sum(Tail).
 len([]) -> 0;
 len([_ | Tail]) -> 1 + len(Tail).
 
-% Is the first argument a memeer of the second argument (a list)?
+% Is the first argument a member of the second argument (a list)?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 member(_, [])      -> false;
 member(H, [H | _]) -> true;
